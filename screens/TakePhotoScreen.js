@@ -1,45 +1,80 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Camera } from 'expo-camera';
-import * as Location from 'expo-location';
+import React, { useState, useRef } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Ionicons } from '@expo/vector-icons';
 
-const TakePhotoScreen = ({ route, navigation }) => {
-  const { setPhotos } = route.params;
+const TakePhotoScreen = ({ navigation }) => {
+  const [facing, setFacing] = useState('back');
+  const [permission, requestPermission] = useCameraPermissions();
+  const [photoData, setPhotoData] = useState(null);
   const cameraRef = useRef(null);
-  const [hasPermission, setHasPermission] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
-
-  if (hasPermission === null) {
+  if (!permission) {
     return <View />;
   }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="Grant permission" />
+      </View>
+    );
   }
 
-  const takePhoto = async () => {
+  function toggleCameraFacing() {
+    setFacing(current => (current === 'back' ? 'front' : 'back'));
+  }
+
+  const takePicture = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync();
-      const location = await Location.getCurrentPositionAsync({});
-      setPhotos(prevPhotos => [...prevPhotos, { uri: photo.uri, location }]);
-      navigation.goBack();
+      let photo = await cameraRef.current.takePictureAsync();
+      console.log('Photo taken:', photo);
+      setPhotoData(photo);
     }
+  };
+
+  const confirmPhoto = () => {
+    navigation.navigate('Home', { photo: photoData }); 
+  };
+
+
+  const cancelPhoto = () => {
+    setPhotoData(null);
   };
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} ref={cameraRef}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={takePhoto}>
-            <Text style={styles.buttonText}>Tomar Foto</Text>
-          </TouchableOpacity>
+      <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
+        <View style={styles.cameraContainer}>
         </View>
-      </Camera>
+        <View style={styles.buttonContainer}>
+          {!photoData && (
+            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+              <Ionicons name="camera-reverse" size={24} color="white" />
+            </TouchableOpacity>
+          )}
+          {!photoData && (
+            <TouchableOpacity style={styles.button} onPress={takePicture}>
+              <Ionicons name="camera" size={24} color="white" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </CameraView>
+
+      {photoData ? (
+        <View style={styles.previewContainer}>
+          <Image source={{ uri: photoData.uri }} style={styles.previewImage} />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={confirmPhoto}>
+              <Ionicons name="checkmark-circle" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={cancelPhoto}>
+              <Ionicons name="close-circle" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -47,28 +82,44 @@ const TakePhotoScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   camera: {
+    width: '100%', 
+    height: '100%',
+  },
+  cameraContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
   },
   buttonContainer: {
-    backgroundColor: 'transparent',
     flexDirection: 'row',
-    justifyContent: 'center',
-    margin: 20,
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+    position: 'absolute',
+    bottom: 20,
+    width: '100%',
   },
   button: {
-    flex: 0.1,
     alignSelf: 'center',
-    alignItems: 'center',
+    padding: 20,
     backgroundColor: '#000',
-    padding: 10,
     borderRadius: 50,
   },
-  buttonText: {
+  text: {
     fontSize: 18,
     color: '#fff',
+  },
+  previewContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  previewImage: {
+    width: '80%',
+    height: '60%',
+    resizeMode: 'contain',
   },
 });
 

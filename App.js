@@ -1,52 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { PhotoProvider } from './PhotoContext'; // Importa el PhotoProvider desde su ubicación correcta
 import HomeScreen from './screens/HomeScreen';
-import PhotoScreen from './screens/PhotoScreen';
 import TakePhotoScreen from './screens/TakePhotoScreen';
+import PhotoScreen from './screens/PhotoScreen';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // Mostrar la pantalla de carga durante 3 segundos
-  }, []);
-
-  if (isLoading) {
-    return (
-      <View style={styles.splashContainer}>
-        <Text style={styles.splashText}>Cargando...</Text>
-      </View>
-    );
-  }
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Fotos' }} />
-        <Stack.Screen name="PhotoScreen" component={PhotoScreen} options={{ title: 'Foto' }} />
-        <Stack.Screen name="TakePhotoScreen" component={TakePhotoScreen} options={{ title: 'Tomar Foto' }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <PhotoProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="TakePhoto" component={TakePhotoScreen} />
+          <Stack.Screen name="Photo" component={PhotoScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PhotoProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  splashContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  splashText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-});
 
 export default App;

@@ -1,16 +1,34 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Share } from 'react-native';
 
 const PhotoScreen = ({ route, navigation }) => {
-  const { photo } = route.params;
+  const { selectedPhoto } = route.params;
+
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: 'Check out this photo!',
+        url: selectedPhoto.uri,
+      });
+    } catch (error) {
+      console.error('Error sharing photo:', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: photo.uri }} style={styles.image} />
-      <Text style={styles.text}>Latitud: {photo.location.coords.latitude}</Text>
-      <Text style={styles.text}>Longitud: {photo.location.coords.longitude}</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <Text style={styles.buttonText}>Volver</Text>
+      <Image source={{ uri: selectedPhoto.uri }} style={styles.previewImage} />
+      <Text style={styles.description}>{selectedPhoto.description}</Text>
+      <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+        <MaterialCommunityIcons name="share" size={24} color="white" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => navigation.goBack()}
+      >
+        <MaterialCommunityIcons name="arrow-left" size={24} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -21,24 +39,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#000',
   },
-  image: {
-    width: '100%',
-    height: 300,
+  previewImage: {
+    width: '80%',
+    height: '60%',
+    resizeMode: 'contain',
+    marginBottom: 20,
   },
-  text: {
+  description: {
+    color: 'white',
     fontSize: 18,
-    marginVertical: 10,
+    marginBottom: 20,
   },
-  button: {
-    marginTop: 20,
-    padding: 15,
+  shareButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    padding: 10,
     backgroundColor: '#000',
     borderRadius: 50,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
+  closeButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    padding: 10,
+    backgroundColor: '#000',
+    borderRadius: 50,
   },
 });
 
