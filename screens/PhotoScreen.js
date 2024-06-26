@@ -20,7 +20,14 @@ const PhotoScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={{ uri: selectedPhoto.uri }} style={styles.previewImage} />
-      <Text style={styles.description}>{selectedPhoto.description}</Text>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>
+          Latitude: {selectedPhoto.location.coords.latitude.toFixed(6)}
+        </Text>
+        <Text style={styles.text}>
+          Longitude: {selectedPhoto.location.coords.longitude.toFixed(6)}
+        </Text>
+      </View>
       <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
         <MaterialCommunityIcons name="share" size={24} color="white" />
       </TouchableOpacity>
@@ -39,31 +46,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#4A4D4C',
   },
   previewImage: {
-    width: '80%',
-    height: '60%',
+    width: '100%',
+    height: '60%', // Ajustar la altura según sea necesario
     resizeMode: 'contain',
     marginBottom: 20,
   },
-  description: {
-    color: 'white',
+  textContainer: {
+    alignItems: 'center',
+  },
+  text: {
     fontSize: 18,
-    marginBottom: 20,
+    color: '#fff',
+    marginBottom: 10,
   },
   shareButton: {
     position: 'absolute',
-    bottom: 20,
-    right: 20,
+    bottom: '10%', // Ajustar según sea necesario
+    right: 20, // Ajustar según sea necesario
     padding: 10,
     backgroundColor: '#000',
     borderRadius: 50,
   },
   closeButton: {
     position: 'absolute',
-    top: 20,
-    right: 20,
+    top: '8%', // Ajustar según sea necesario
+    left: 20, // Ajustar según sea necesario
     padding: 10,
     backgroundColor: '#000',
     borderRadius: 50,

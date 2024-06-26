@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, FlatList, Image, TouchableOpacity, StyleSheet, Share, Dimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import PhotoContext from '../PhotoContext';
+import PhotoContext from '../components/PhotoContext';
 
 const HomeScreen = ({ navigation, route }) => {
   const { photos, setPhotos } = useContext(PhotoContext);

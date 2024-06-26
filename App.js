@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { PhotoProvider } from './PhotoContext'; // Importa el PhotoProvider desde su ubicación correcta
+import { PhotoProvider } from './components/PhotoContext';
 import HomeScreen from './screens/HomeScreen';
 import TakePhotoScreen from './screens/TakePhotoScreen';
 import PhotoScreen from './screens/PhotoScreen';
