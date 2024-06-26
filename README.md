@@ -22,7 +22,7 @@ TakePhotoScreen es una aplicación móvil desarrollada en React Native que permi
 
 1. Clona este repositorio: `git clone <URL_DEL_REPOSITORIO>`
 2. Instala las dependencias: `npm install`
-3. Inicia la aplicación: `npm start` o `expo start`
+3. Inicia la aplicación: `npx expo start`
 
 ## Contribución
 
