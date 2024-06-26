@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Text, TouchableOpacity, View, Image } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
+import styles from './TakePhotoScreenStyles';
 
-const TakePhotoScreen = ({ navigation }) => {
+export const TakePhotoScreen = ({ navigation }) => {
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [locationPermission, setLocationPermission] = useState(null);
@@ -45,10 +46,6 @@ const TakePhotoScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     );
-  }
-
-  function toggleCameraFacing() {
-    setFacing(current => (current === 'back' ? 'front' : 'back'));
   }
 
   const takePicture = async () => {
@@ -104,73 +101,3 @@ const TakePhotoScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  camera: {
-    width: '100%',
-    height: '100%',
-  },
-  cameraContainer: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingHorizontal: 20,
-    position: 'absolute',
-    bottom: '10%',
-    width: '100%',
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 50,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-  },
-  takePictureButton: {
-    backgroundColor: '#14AB78',
-  },
-  confirmButton: {
-    backgroundColor: '#000000',
-  },
-  cancelButton: {
-    backgroundColor: '#dc3545',
-  },
-  text: {
-    fontSize: 18,
-    color: '#fff',
-  },
-  previewContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#4A4D4C',
-  },
-  previewImage: {
-    width: '80%',
-    height: '60%',
-    resizeMode: 'contain',
-  },
-  message: {
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  permissionButton: {
-    backgroundColor: '#000000',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-});
-
-export default TakePhotoScreen;

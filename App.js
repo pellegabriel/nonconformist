@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { PhotoProvider } from './components/PhotoContext';
-import HomeScreen from './screens/HomeScreen';
-import TakePhotoScreen from './screens/TakePhotoScreen';
-import PhotoScreen from './screens/PhotoScreen';
+import { PhotoProvider } from './context/PhotoContext';
+import { HomeScreen } from './screens/Home/HomeScreen';
+import { TakePhotoScreen } from './screens/TakePhoto/TakePhotoScreen';
+import { PhotoScreen } from './screens/Photo/PhotoScreen';
 
 const Stack = createStackNavigator();
 
